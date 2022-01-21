@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
@@ -13,16 +13,24 @@
     <Content Include="WinUI3.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+
+      <ContentWithTargetPath Include="$(SolutionDir)\$(Platform)\$(Configuration)\Win32NativeAPIsImpl.dll">
+          <TargetPath>Win32NativeAPIsImpl.dll</TargetPath>
+          <Link>Win32NativeAPIsImpl.dll</Link>
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </ContentWithTargetPath>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.5.0" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.5.0" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.5.0" />
+    <PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.6" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.6" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.6" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\bridge_interop\bridge_interop.csproj" />
     <ProjectReference Include="..\..\WindowExtensions\WindowExtensions.csproj" />
   </ItemGroup>
 

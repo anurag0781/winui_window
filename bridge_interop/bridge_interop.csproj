@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
+        <TargetPlatformMinVersion Condition=" '$(TargetPlatformMinVersion)' == '' ">10.0.17763.0</TargetPlatformMinVersion>
+        <_DefaultTargetFramework>net5.0-windows$(TargetPlatformVersion)</_DefaultTargetFramework>
+        <_DefaultRuntimeIdentifiers>win10-x86;win10-x64;win10-arm64</_DefaultRuntimeIdentifiers>
+        <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
+        <Platforms>AnyCPU;x64</Platforms>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.6" />
+        <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\bridge\bridge.vcxproj" />
+    </ItemGroup>
+
+</Project>

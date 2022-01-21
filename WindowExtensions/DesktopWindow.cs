@@ -284,7 +284,7 @@ namespace WinUIExtensions.Desktop
                 return SetWindowLongPtr32(hWnd, nIndex, newProc);
         }
         [DllImport("user32.dll")]
-        static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, PInvoke.User32.WindowMessage Msg, IntPtr wParam, IntPtr lParam);
+        static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, PInvoke.User32.WindowMessage Msg, IntPtr wParam, IntPtr lParam);        
 
         private void SubClassingWin32()
         {
@@ -296,7 +296,7 @@ namespace WinUIExtensions.Desktop
 
             }
             newWndProc = new WinProc(NewWindowProc);
-            oldWndProc = SetWindowLongPtr(_hwnd, PInvoke.User32.WindowLongIndexFlags.GWL_WNDPROC, newWndProc);
+            oldWndProc = SetWindowLongPtr(_hwnd, PInvoke.User32.WindowLongIndexFlags.GWL_WNDPROC, newWndProc);            
         }
 
         private void LoadIcon(IntPtr hwnd, string iconName)

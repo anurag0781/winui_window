@@ -1,7 +1,12 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.UI.Xaml;
+using Microsoft.Graphics.Canvas.Brushes;
 using System;
 using WinUIExtensions.Desktop;
+using Windows.Foundation;
+using System.Runtime.InteropServices;
 
 
 namespace DesktopWindowSample
@@ -11,6 +16,11 @@ namespace DesktopWindowSample
         public MainWindow()
         {
             this.InitializeComponent();
+
+            _canvasSwapChainPanel.Width = 100;
+            _canvasSwapChainPanel.SwapChain = new CanvasSwapChain(CanvasDevice.GetSharedDevice(), 100, 100, 1.25f * 96);
+
+            this.Activated += WindowActivated;                        
 
             // MUX.Window features
             this.Title = "Showcase DesktopWindow API";
@@ -69,6 +79,22 @@ namespace DesktopWindowSample
 
             //Get the current DPI of the display that host the window
             dpiChangedTBox.Text =  $"DPI: {this.Dpi}";
+        }
+
+        [DllImport("Win32NativeAPIsImpl.dll")]
+        static extern void DisplayWindowInSecondaryMonitor(IntPtr hwnd);
+
+        void WindowActivated(Object o, WindowActivatedEventArgs args)
+        {
+            using (CanvasDrawingSession ds = _canvasSwapChainPanel.SwapChain.CreateDrawingSession(Microsoft.UI.Colors.White))
+            {
+                ds.DrawCircle(50, 50, 25, Microsoft.UI.Colors.Red, 20);
+            }
+
+            _canvasSwapChainPanel.SwapChain.Present();
+
+            DisplayWindowInSecondaryMonitor(this.Hwnd);
+
         }
 
         private void MainWindow_OrientationChanged(object sender, WindowOrientationChangedEventArgs e)
