@@ -135,6 +135,7 @@ namespace WinUIExtensions.Desktop
         public event EventHandler<WindowDpiChangedEventArgs> DpiChanged;
         public event EventHandler<WindowOrientationChangedEventArgs> OrientationChanged;
         public event EventHandler<WindowKeyDownEventArgs> KeyDown;
+        public Action MonitorTopologyChanged;
 
         public IntPtr Hwnd
         {
@@ -391,6 +392,7 @@ namespace WinUIExtensions.Desktop
                             OnWindowOrientationChanged(newOrinetation);
                         }
                     }
+                    MonitorTopologyChanged();
                     break;
                 //This don't work.
                 case PInvoke.User32.WindowMessage.WM_KEYDOWN:

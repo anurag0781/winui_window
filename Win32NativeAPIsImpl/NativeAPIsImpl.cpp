@@ -33,3 +33,25 @@ extern "C" __declspec(dllexport) void DisplayWindowInSecondaryMonitor(HWND hwnd)
     }
 }
 
+extern "C" __declspec(dllexport) int GetTopology()
+{
+    UINT32 PathArraySize = 0;
+    UINT32 ModeArraySize = 0;
+    DISPLAYCONFIG_PATH_INFO* PathArray;
+    DISPLAYCONFIG_MODE_INFO* ModeArray;
+    DISPLAYCONFIG_TOPOLOGY_ID CurrentTopology;
+
+    GetDisplayConfigBufferSizes(QDC_ALL_PATHS, &PathArraySize, &ModeArraySize);    
+
+    PathArray = new DISPLAYCONFIG_PATH_INFO[PathArraySize]();
+    ModeArray = new DISPLAYCONFIG_MODE_INFO[ModeArraySize]();
+
+    LONG ret = QueryDisplayConfig(QDC_DATABASE_CURRENT, &PathArraySize, PathArray, &ModeArraySize, ModeArray, &CurrentTopology);    
+
+    delete[] PathArray;
+    delete[] ModeArray;
+
+    return CurrentTopology;
+}
+
+

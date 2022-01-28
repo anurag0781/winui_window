@@ -7,15 +7,26 @@ using System;
 using WinUIExtensions.Desktop;
 using Windows.Foundation;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 
 namespace DesktopWindowSample
 {
     public sealed partial class MainWindow : DesktopWindow
     {
+        private static int savedPrevioustopology;
+        Dictionary<int, string> topologyIdsToValuesMap;
+
         public MainWindow()
         {
             this.InitializeComponent();
+
+            savedPrevioustopology = GetTopology();
+            topologyIdsToValuesMap = new Dictionary<int, string>();
+            topologyIdsToValuesMap[1] = "Show on One";
+            topologyIdsToValuesMap[2] = "Duplicate";
+            topologyIdsToValuesMap[4] = "Extend";
+            topologyIdsToValuesMap[8] = "Show on Two";
 
             _canvasSwapChainPanel.Width = 100;
             _canvasSwapChainPanel.SwapChain = new CanvasSwapChain(CanvasDevice.GetSharedDevice(), 100, 100, 1.25f * 96);
@@ -59,6 +70,8 @@ namespace DesktopWindowSample
             //Fire when the orientation (portrait and landscape) of the display that host the window changes
             this.OrientationChanged += MainWindow_OrientationChanged;
 
+            this.MonitorTopologyChanged += MainWindow_MonitorTopologyChanged;
+
             //Get the heigh and the width
             debugTBox.Text = $" Size (Height: { this.Height } Width: { this.Width })";
 
@@ -84,6 +97,9 @@ namespace DesktopWindowSample
         [DllImport("Win32NativeAPIsImpl.dll")]
         static extern void DisplayWindowInSecondaryMonitor(IntPtr hwnd);
 
+        [DllImport("Win32NativeAPIsImpl.dll")]
+        static extern int GetTopology();
+
         void WindowActivated(Object o, WindowActivatedEventArgs args)
         {
             using (CanvasDrawingSession ds = _canvasSwapChainPanel.SwapChain.CreateDrawingSession(Microsoft.UI.Colors.White))
@@ -91,15 +107,30 @@ namespace DesktopWindowSample
                 ds.DrawCircle(50, 50, 25, Microsoft.UI.Colors.Red, 20);
             }
 
-            _canvasSwapChainPanel.SwapChain.Present();
+            _canvasSwapChainPanel.SwapChain.Present();            
 
-            DisplayWindowInSecondaryMonitor(this.Hwnd);
+            DisplayWindowInSecondaryMonitor(this.Hwnd);            
 
         }
 
         private void MainWindow_OrientationChanged(object sender, WindowOrientationChangedEventArgs e)
         {
             dpiChangedTBox.Text = $"DPI: {this.Dpi} + Orientation: { e.Orientation.ToString("g")}";
+        }
+
+        private async void MainWindow_MonitorTopologyChanged()
+        {
+            int currentTopology = GetTopology();
+            if (savedPrevioustopology != currentTopology)
+            {
+                ContentDialog contentDialog = new ContentDialog();
+                contentDialog.Content = "Topology changed from \"" + topologyIdsToValuesMap[savedPrevioustopology] + "\" to \"" + topologyIdsToValuesMap[currentTopology] + "\".";
+                contentDialog.XamlRoot = this.Content.XamlRoot;
+                contentDialog.CloseButtonText = "OK";
+                contentDialog.IsPrimaryButtonEnabled = false;
+                var r = await contentDialog.ShowAsync();
+                savedPrevioustopology = currentTopology;
+            }
         }
 
         private void MainWindow_DpiChanged(object sender, WindowDpiChangedEventArgs e)
