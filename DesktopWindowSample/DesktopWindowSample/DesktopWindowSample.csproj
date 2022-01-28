@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\bridge_interop\bridge_interop.csproj" />
     <ProjectReference Include="..\..\WindowExtensions\WindowExtensions.csproj" />
   </ItemGroup>
 
